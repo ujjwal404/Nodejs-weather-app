@@ -6,7 +6,7 @@
 npm start
 ```
 
-## To run app in development mode dev : 
+## To run app in development mode : 
 ```
 npm run dev
 ```
