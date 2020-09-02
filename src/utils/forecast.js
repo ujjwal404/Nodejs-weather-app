@@ -9,7 +9,11 @@ const forecast = (latitude, longitude, callback) => {
     } else if (body.message) {
       callback('Unable to get location', undefined);
     } else {
-      callback(undefined, `Temp is ${body.main.temp} degree ,${body.weather[0].description} .`);
+      callback(
+        undefined,
+        `Temp is ${body.main.temp} degree ,${body.weather[0].description} .
+      MIN TEMP : ${body.main.temp_min} MAX TEMP : ${body.main.temp_max}`
+      );
     }
   });
 };
