@@ -1,76 +1,81 @@
-const path = require('path');
-const express = require('express');
-const hbs = require('hbs');
-const geocode = require('./utils/geoCode');
-const forecast = require('./utils/forecast');
+const path = require('path')
+const express = require('express')
+const hbs = require('hbs')
+const geocode = require('./utils/geoCode')
+const forecast = require('./utils/forecast')
 
-const app = express();
-const port = process.env.PORT || 3003;
+const app = express()
+const port = process.env.PORT || 3003
 //Define path for express config
-const publicDirPath = path.join(__dirname, '../public');
-const viewsPath = path.join(__dirname, './templates/views');
-const partialsPath = path.join(__dirname, './templates/partials');
+const publicDirPath = path.join(__dirname, '../public')
+const viewsPath = path.join(__dirname, './templates/views')
+const partialsPath = path.join(__dirname, './templates/partials')
 
 //setup handlebars engine and views location
-app.set('view engine', 'hbs');
-app.set('views', viewsPath);
-hbs.registerPartials(partialsPath);
+app.set('view engine', 'hbs')
+app.set('views', viewsPath)
+hbs.registerPartials(partialsPath)
 
 //setup static directory to serve
-app.use(express.static(publicDirPath));
+app.use(express.static(publicDirPath))
 
 app.get('', (req, res) => {
   res.render('index', {
-    title: 'Weather',
-    name: 'Ujjwal'
-  });
-});
+    title: 'Weather 🌤',
+    name: 'Ujjwal',
+  })
+})
 
 app.get('/about', (req, res) => {
   res.render('about', {
-    title: 'About',
-    name: 'Ujjwal'
-  });
-});
+    title: 'About 🐳',
+    name: 'Ujjwal',
+  })
+})
 
 app.get('/help', (req, res) => {
   res.render('help', {
-    title: 'Help',
+    title: 'Help🚶‍♂️',
     description: 'Nothing to help sorry',
-    name: 'Ujjwal'
-  });
-});
+    name: 'Ujjwal',
+  })
+})
 
 app.get('/weather', (req, res) => {
   if (!req.query.address) {
     return res.send({
-      error: 'You must provide an address'
-    });
+      error: 'You must provide an address',
+    })
   }
 
-  geocode(req.query.address, (error, { latitude, longitude, location } = {}) => {
-    if (error) return res.send({ error });
-    else {
-      forecast(latitude, longitude, (error, result) => {
-        if (error) return res.send({ error });
-        res.send({
-          forecast: result,
-          location: location,
-          address: req.query.address
-        });
-      });
-    }
-  });
-});
+  geocode(
+    req.query.address,
+    (error, { latitude, longitude, location } = {}) => {
+      if (error) return res.send({ error })
+      else {
+        forecast(latitude, longitude, (error, result, result1, result2) => {
+          if (error) return res.send({ error })
+          res.send({
+            forecast: result,
+            forecast1: result1,
+            forecast2: result2,
+            location: location,
+            address: req.query.address,
+          })
+        })
+      }
+    },
+  )
+})
 
 app.get('/help/*', (req, res) => {
-  res.render('404', { error: 'Article not found' });
-});
+  res.render('404', { error: 'Article not found' })
+})
 
 app.get('*', (req, res) => {
-  res.render('404', { title: '404', error: 'Page not found', name: 'ujjwal' });
-});
+  res.render('404', { title: '404', error: 'Page not found', name: 'ujjwal' })
+})
 
 app.listen(port, () => {
-  console.log(`server is up on port ${port}`);
-});
+  console.log(`server is up on port ${port}`)
+})
